@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Plans | EFL Investment Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Investment Page Specific Styles */
+        .investment-hero {
+            background: linear-gradient(135deg, rgba(42, 157, 143, 0.1) 0%, rgba(38, 70, 83, 0.1) 100%);
+            padding: 4rem 0;
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .investment-hero h1 {
+            margin-bottom: 1rem;
+        }
+        
+        .investment-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+        
+        @media (max-width: 768px) {
+            .investment-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .investment-card {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .investment-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .investment-header {
+            padding: 2rem;
+            color: white;
+            position: relative;
+        }
+        
+        .investment-header.basic {
+            background: linear-gradient(135deg, var(--success-color) 0%, #1d7873 100%);
+        }
+        
+        .investment-header.plus {
+            background: linear-gradient(135deg, var(--warning-color) 0%, #ff7b00 100%);
+        }
+        
+        .investment-header.managed {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, #1a365d 100%);
+        }
+        
+        .investment-header h3 {
+            color: white;
+            margin-bottom: 0.5rem;
+            font-size: 1.75rem;
+        }
+        
+        .investment-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+        
+        .investment-body {
+            padding: 2rem;
+        }
+        
+        .investment-detail {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .investment-detail:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .investment-detail i {
+            width: 40px;
+            height: 40px;
+            background: var(--light-gray);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+        
+        .investment-detail div {
+            flex: 1;
+        }
+        
+        .investment-detail h4 {
+            font-size: 0.95rem;
+            color: var(--gray-color);
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+        
+        .investment-detail p {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .investment-footer {
+            padding: 1.5rem 2rem;
+            background: var(--light-gray);
+            text-align: center;
+        }
+        
+        .recommendation-section {
+            margin-top: 4rem;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(26, 54, 93, 0.05) 0%, rgba(45, 116, 218, 0.05) 100%);
+            border-radius: var(--border-radius-lg);
+        }
+        
+        .recommendation-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+        }
+        
+        .recommendation-content {
+            margin-bottom: 2rem;
+        }
+        
+        .recommendation-content h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .recommendation-content ul {
+            margin: 1rem 0 1.5rem 1.5rem;
+        }
+        
+        .recommendation-content li {
+            margin-bottom: 0.75rem;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .comparison-table {
+            margin-top: 4rem;
+        }
+        
+        .comparison-table h3 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        table.comparison {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        
+        table.comparison thead {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+        }
+        
+        table.comparison th {
+            padding: 1.5rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        table.comparison th:first-child {
+            width: 200px;
+        }
+        
+        table.comparison td {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        table.comparison tr:last-child td {
+            border-bottom: none;
+        }
+        
+        table.comparison tr:hover {
+            background: rgba(0, 180, 216, 0.05);
+        }
+        
+        .plan-highlight {
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+        
+        .risk-indicator {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .risk-low {
+            background: rgba(42, 157, 143, 0.1);
+            color: var(--success-color);
+        }
+        
+        .risk-medium {
+            background: rgba(255, 158, 0, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .risk-high {
+            background: rgba(45, 116, 218, 0.1);
+            color: var(--secondary-color);
+        }
+        
+        .feature-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-item {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .feature-item h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .feature-item i {
+            color: var(--accent-color);
+        }
+        
+        .plan-benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .benefit-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .benefit-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="container nav-container">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <span>EFL</span>Invest
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="currency.html"><i class="fas fa-exchange-alt"></i> Currency</a></li>
+                    <li><a href="investments.html" class="active"><i class="fas fa-piggy-bank"></i> Investments</a></li>
+                    <li><a href="qoutes.html"><i class="fas fa-file-invoice-dollar"></i> Quotes</a></li>
+                    <li><a href="profile.html"><i class="fas fa-user-circle"></i> Profile</a></li>
+                    <li>
+    <button id="themeToggle" class="theme-toggle-btn">
+        <i class="fas fa-moon"></i>
+    </button>
+</li>
+                </ul>
+                
+                <button class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <main class="container">
+            <section class="investment-hero">
+                <h1>Investment Plans</h1>
+                <p class="subtitle">Choose from three tailored investment options designed to meet different financial goals and risk profiles</p>
+                <div class="action-buttons" style="margin-top: 2rem;">
+                    <a href="#plans" class="btn btn-primary">
+                        <i class="fas fa-list"></i> View Plans
+                    </a>
+                    <a href="quotes.html" class="btn btn-secondary">
+                        <i class="fas fa-calculator"></i> Generate Quote
+                    </a>
+                </div>
+            </section>
+
+            <!-- Investment Plans -->
+            <section id="plans">
+                <h2>Available Investment Plans</h2>
+                <p class="section-description">Each plan offers different risk/reward profiles to match your investment strategy</p>
+                
+                <div class="investment-cards">
+                    <!-- Basic Savings Plan -->
+                    <div class="investment-card">
+                        <div class="investment-header basic">
+                            <h3>Basic Savings Plan</h3>
+                            <div class="investment-badge">Low Risk</div>
+                        </div>
+                        <div class="investment-body">
+                            <div class="investment-detail">
+                                <i class="fas fa-pound-sign"></i>
+                                <div>
+                                    <h4>Max Annual Investment</h4>
+                                    <p>£20,000</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <h4>Min Monthly Investment</h4>
+                                    <p>£50</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-money-bill-alt"></i>
+                                <div>
+                                    <h4>Min Initial Investment</h4>
+                                    <p>£0</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-chart-line"></i>
+                                <div>
+                                    <h4>Annual Returns</h4>
+                                    <p>1.2% - 2.4%</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                                <div>
+                                    <h4>Monthly Fees</h4>
+                                    <p>0.25%</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-balance-scale"></i>
+                                <div>
+                                    <h4>Tax</h4>
+                                    <p>0% on all profits</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="investment-footer">
+                            <button class="btn btn-outline select-plan" data-plan="basic">
+                                <i class="fas fa-check-circle"></i> Select This Plan
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Savings Plan Plus -->
+                    <div class="investment-card">
+                        <div class="investment-header plus">
+                            <h3>Savings Plan Plus</h3>
+                            <div class="investment-badge">Medium Risk</div>
+                        </div>
+                        <div class="investment-body">
+                            <div class="investment-detail">
+                                <i class="fas fa-pound-sign"></i>
+                                <div>
+                                    <h4>Max Annual Investment</h4>
+                                    <p>£30,000</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <h4>Min Monthly Investment</h4>
+                                    <p>£50</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-money-bill-alt"></i>
+                                <div>
+                                    <h4>Min Initial Investment</h4>
+                                    <p>£300</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-chart-line"></i>
+                                <div>
+                                    <h4>Annual Returns</h4>
+                                    <p>3% - 5.5%</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                                <div>
+                                    <h4>Monthly Fees</h4>
+                                    <p>0.3%</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-balance-scale"></i>
+                                <div>
+                                    <h4>Tax</h4>
+                                    <p>10% on profits above £12,000</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="investment-footer">
+                            <button class="btn btn-primary select-plan" data-plan="plus">
+                                <i class="fas fa-check-circle"></i> Select This Plan
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Managed Stock Investments -->
+                    <div class="investment-card">
+                        <div class="investment-header managed">
+                            <h3>Managed Stock Investments</h3>
+                            <div class="investment-badge">High Risk</div>
+                        </div>
+                        <div class="investment-body">
+                            <div class="investment-detail">
+                                <i class="fas fa-infinity"></i>
+                                <div>
+                                    <h4>Max Annual Investment</h4>
+                                    <p>Unlimited</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <h4>Min Monthly Investment</h4>
+                                    <p>£150</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-money-bill-alt"></i>
+                                <div>
+                                    <h4>Min Initial Investment</h4>
+                                    <p>£1,000</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-chart-line"></i>
+                                <div>
+                                    <h4>Annual Returns</h4>
+                                    <p>4% - 23%</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                                <div>
+                                    <h4>Monthly Fees</h4>
+                                    <p>1.3%</p>
+                                </div>
+                            </div>
+                            <div class="investment-detail">
+                                <i class="fas fa-balance-scale"></i>
+                                <div>
+                                    <h4>Tax</h4>
+                                    <p>10% (>£12k) + 20% (>£40k)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="investment-footer">
+                            <button class="btn btn-outline select-plan" data-plan="managed">
+                                <i class="fas fa-check-circle"></i> Select This Plan
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recommendation Section -->
+            <section class="recommendation-section">
+                <h2><i class="fas fa-lightbulb"></i> Investment Recommendation</h2>
+                <p class="section-description">Based on your risk profile and investment goals, here's our recommendation</p>
+                
+                <div class="recommendation-card">
+                    <div class="recommendation-content" id="recommendationContent">
+                        <h4>Savings Plan Plus</h4>
+                        <p>Based on a typical investor profile, we recommend the <strong>Savings Plan Plus</strong> for balanced growth with manageable risk.</p>
+                        
+                        <p><strong>Why this plan is recommended:</strong></p>
+                        <ul>
+                            <li><strong>Optimal Risk/Reward Balance:</strong> 3-5.5% returns with moderate risk</li>
+                            <li><strong>Accessible Entry Point:</strong> Minimum £300 initial + £50/month investment</li>
+                            <li><strong>Tax Efficiency:</strong> Only 10% tax on profits above £12,000</li>
+                            <li><strong>Reasonable Fees:</strong> 0.3% monthly management fee</li>
+                            <li><strong>Growth Potential:</strong> Suitable for medium-term financial goals (3-7 years)</li>
+                        </ul>
+                        
+                        <p><strong>Best for:</strong> Investors seeking growth above inflation while maintaining capital security and regular income potential.</p>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button id="generateQuote" class="btn btn-primary">
+                            <i class="fas fa-file-alt"></i> Generate Detailed Quote
+                        </button>
+                        <a href="quotes.html" class="btn btn-outline">
+                            <i class="fas fa-calculator"></i> Customize Quote
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Plan Comparison -->
+            <section class="comparison-table">
+                <h2>Plan Comparison</h2>
+                <p class="section-description">Compare all three investment plans side by side</p>
+                
+                <table class="comparison">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Basic Savings Plan</th>
+                            <th>Savings Plan Plus</th>
+                            <th>Managed Stock Investments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Risk Level</strong></td>
+                            <td><span class="risk-indicator risk-low">Low</span></td>
+                            <td><span class="risk-indicator risk-medium">Medium</span></td>
+                            <td><span class="risk-indicator risk-high">High</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Annual Returns</strong></td>
+                            <td>1.2% - 2.4%</td>
+                            <td class="plan-highlight">3% - 5.5%</td>
+                            <td>4% - 23%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Min Initial Investment</strong></td>
+                            <td>£0</td>
+                            <td>£300</td>
+                            <td>£1,000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Min Monthly Investment</strong></td>
+                            <td>£50</td>
+                            <td>£50</td>
+                            <td>£150</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Max Annual Investment</strong></td>
+                            <td>£20,000</td>
+                            <td>£30,000</td>
+                            <td>Unlimited</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Monthly Fees</strong></td>
+                            <td>0.25%</td>
+                            <td>0.3%</td>
+                            <td>1.3%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Taxation</strong></td>
+                            <td>0% on all profits</td>
+                            <td>10% on profits above £12,000</td>
+                            <td>10% (>£12k) + 20% (>£40k)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Recommended For</strong></td>
+                            <td>Emergency funds, short-term goals</td>
+                            <td class="plan-highlight">Medium-term growth, retirement savings</td>
+                            <td>Long-term wealth building</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Investment Horizon</strong></td>
+                            <td>1-3 years</td>
+                            <td>3-7 years</td>
+                            <td>7+ years</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Key Features -->
+            <section class="features">
+                <h2>Platform Benefits</h2>
+                <p class="section-description">Why choose EFL Investment Platform for your financial goals</p>
+                
+                <div class="plan-benefits">
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Secure & Regulated</h4>
+                        <p>Bank-level security with FCA regulation for complete peace of mind</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Transparent Fees</h4>
+                        <p>No hidden charges with clear fee structure shown upfront</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4>Easy Management</h4>
+                        <p>Manage investments online or via mobile app anytime, anywhere</p>
+                    </div>
+                    
+                    <div class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h4>Expert Support</h4>
+                        <p>Dedicated financial advisors available for personalized guidance</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How to Get Started -->
+            <section class="quick-actions">
+                <h2>Ready to Invest?</h2>
+                <p class="section-description">Follow these simple steps to start your investment journey</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-primary);">
+                            <i class="fas fa-1"></i>
+                        </div>
+                        <h3>Choose Your Plan</h3>
+                        <p>Select an investment plan that matches your financial goals and risk tolerance</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-accent);">
+                            <i class="fas fa-2"></i>
+                        </div>
+                        <h3>Generate Quote</h3>
+                        <p>Use our quote calculator to see projected returns, fees, and taxes</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-success);">
+                            <i class="fas fa-3"></i>
+                        </div>
+                        <h3>Open Account</h3>
+                        <p>Complete your profile and start investing with as little as £50</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-warning);">
+                            <i class="fas fa-4"></i>
+                        </div>
+                        <h3>Monitor & Grow</h3>
+                        <p>Track performance and adjust your strategy through your dashboard</p>
+                    </div>
+                </div>
+                
+                <div class="action-buttons" style="margin-top: 3rem;">
+                    <a href="currency.html" class="btn btn-outline">
+                        <i class="fas fa-exchange-alt"></i> Currency Converter
+                    </a>
+                    <a href="quotes.html" class="btn btn-primary">
+                        <i class="fas fa-calculator"></i> Generate Quote Now
+                    </a>
+                    <a href="profile.html" class="btn btn-secondary">
+                        <i class="fas fa-user-plus"></i> Open Account
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>EFL Invest Platform</h4>
+                        <p>Professional financial tools developed by PDS Digital Solutions for Enomy-Finances Limited.</p>
+                        <div class="footer-social">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                            <li><a href="currency.html"><i class="fas fa-chevron-right"></i> Currency Converter</a></li>
+                            <li><a href="investments.html"><i class="fas fa-chevron-right"></i> Investment Plans</a></li>
+                            <li><a href="quotes.html"><i class="fas fa-chevron-right"></i> Quotes</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Cookie Policy</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Compliance</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Contact</h4>
+                        <p><i class="fas fa-envelope"></i> support@eflinvest.com</p>
+                        <p><i class="fas fa-phone"></i> +44 20 7123 4567</p>
+                        <p><i class="fas fa-map-marker-alt"></i> London, United Kingdom</p>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2025 EFL Investment Platform. Developed by PDS Digital Solutions. All rights reserved.</p>
+                    <p class="system-status">
+                        <i class="fas fa-circle status-online"></i> System Status: <strong>Operational</strong>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Error Modal -->
+        <div class="modal" id="errorModal">
+            <div class="modal-content">
+                <div class="modal-header error">
+                    <h3><i class="fas fa-exclamation-triangle"></i> System Error</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="errorMessage">An unexpected error has occurred. Please try again later.</p>
+                    <div class="error-actions">
+                        <button class="btn btn-primary" id="retryButton">Retry</button>
+                        <button class="btn btn-outline" id="reportButton">Report Issue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Toast -->
+        <div class="toast" id="successToast">
+            <div class="toast-content">
+                <i class="fas fa-check-circle toast-icon"></i>
+                <div class="toast-message">Operation completed successfully!</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        // Investment Page Specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const planButtons = document.querySelectorAll('.select-plan');
+            const recommendationContent = document.getElementById('recommendationContent');
+            const generateQuoteBtn = document.getElementById('generateQuote');
+            
+            // Initialize Investment Calculator
+            const calculator = window.InvestmentCalculator ? new window.InvestmentCalculator() : null;
+            
+            // Plan selection functionality
+            if (planButtons.length > 0) {
+                planButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const plan = this.dataset.plan;
+                        
+                        // Update selected state
+                        planButtons.forEach(btn => {
+                            btn.classList.remove('btn-primary');
+                            btn.classList.add('btn-outline');
+                        });
+                        this.classList.remove('btn-outline');
+                        this.classList.add('btn-primary');
+                        
+                        // Update recommendation
+                        updateRecommendation(plan);
+                        
+                        // Store selected plan
+                        localStorage.setItem('selectedPlan', plan);
+                        
+                        // Show success message
+                        if (window.shared) {
+                            const planNames = {
+                                'basic': 'Basic Savings Plan',
+                                'plus': 'Savings Plan Plus',
+                                'managed': 'Managed Stock Investments'
+                            };
+                            window.shared.showToast(`${planNames[plan]} selected`);
+                        }
+                    });
+                });
+                
+                // Select Savings Plan Plus by default
+                if (planButtons.length > 1) {
+                    planButtons[1].click();
+                }
+            }
+            
+            // Update recommendation content
+            function updateRecommendation(plan) {
+                if (!recommendationContent) return;
+                
+                const planData = {
+                    'basic': {
+                        name: 'Basic Savings Plan',
+                        returns: '1.2% - 2.4%',
+                        minInitial: '£0',
+                        minMonthly: '£50',
+                        fees: '0.25%',
+                        tax: '0% on all profits',
+                        bestFor: 'Conservative investors seeking capital preservation',
+                        why: [
+                            'Capital protection with guaranteed returns',
+                            'No tax on profits for maximum efficiency',
+                            'Flexible withdrawals with no penalties',
+                            'Ideal for emergency funds and short-term goals'
+                        ]
+                    },
+                    'plus': {
+                        name: 'Savings Plan Plus',
+                        returns: '3% - 5.5%',
+                        minInitial: '£300',
+                        minMonthly: '£50',
+                        fees: '0.3%',
+                        tax: '10% on profits above £12,000',
+                        bestFor: 'Balanced growth investors',
+                        why: [
+                            'Optimal risk/reward balance for medium-term growth',
+                            'Accessible entry point with reasonable minimums',
+                            'Tax-efficient structure for growing portfolios',
+                            'Professional management with regular rebalancing'
+                        ]
+                    },
+                    'managed': {
+                        name: 'Managed Stock Investments',
+                        returns: '4% - 23%',
+                        minInitial: '£1,000',
+                        minMonthly: '£150',
+                        fees: '1.3%',
+                        tax: '10% (>£12k) + 20% (>£40k)',
+                        bestFor: 'Aggressive investors seeking high returns',
+                        why: [
+                            'High growth potential with diversified stock portfolio',
+                            'Professional active management for optimal returns',
+                            'Access to premium investment opportunities',
+                            'Ideal for long-term wealth accumulation'
+                        ]
+                    }
+                };
+                
+                const data = planData[plan];
+                if (!data) return;
+                
+                let recommendationHTML = `
+                    <h4>${data.name}</h4>
+                    <p>Based on your selection, the <strong>${data.name}</strong> offers:</p>
+                    
+                    <p><strong>Key Features:</strong></p>
+                    <ul>
+                        <li><strong>Expected Returns:</strong> ${data.returns} annually</li>
+                        <li><strong>Minimum Investment:</strong> ${data.minInitial} initial + ${data.minMonthly}/month</li>
+                        <li><strong>Management Fees:</strong> ${data.fees} monthly</li>
+                        <li><strong>Taxation:</strong> ${data.tax}</li>
+                    </ul>
+                    
+                    <p><strong>Why this plan is suitable:</strong></p>
+                    <ul>
+                `;
+                
+                data.why.forEach(reason => {
+                    recommendationHTML += `<li>${reason}</li>`;
+                });
+                
+                recommendationHTML += `
+                    </ul>
+                    
+                    <p><strong>Best for:</strong> ${data.bestFor}.</p>
+                    
+                    <div class="plan-benefits" style="margin-top: 1.5rem;">
+                        <div class="benefit-card" style="margin: 0.5rem; padding: 1rem;">
+                            <i class="fas fa-chart-line" style="color: var(--accent-color);"></i>
+                            <p><strong>Growth:</strong> ${data.returns}</p>
+                        </div>
+                        <div class="benefit-card" style="margin: 0.5rem; padding: 1rem;">
+                            <i class="fas fa-shield-alt" style="color: var(--success-color);"></i>
+                            <p><strong>Risk:</strong> ${plan === 'basic' ? 'Low' : plan === 'plus' ? 'Medium' : 'High'}</p>
+                        </div>
+                        <div class="benefit-card" style="margin: 0.5rem; padding: 1rem;">
+                            <i class="fas fa-clock" style="color: var(--warning-color);"></i>
+                            <p><strong>Horizon:</strong> ${plan === 'basic' ? '1-3 years' : plan === 'plus' ? '3-7 years' : '7+ years'}</p>
+                        </div>
+                    </div>
+                `;
+                
+                recommendationContent.innerHTML = recommendationHTML;
+            }
+            
+            // Generate quote button
+            if (generateQuoteBtn) {
+                generateQuoteBtn.addEventListener('click', function() {
+                    const selectedPlan = localStorage.getItem('selectedPlan');
+                    if (!selectedPlan) {
+                        if (window.shared) {
+                            window.shared.showError('Please select an investment plan first');
+                        }
+                        return;
+                    }
+                    
+                    // Redirect to quotes page with pre-selected plan
+                    window.location.href = `quotes.html?plan=${selectedPlan}`;
+                });
+            }
+            
+            // Initialize tooltips for plan features
+            const tooltipElements = document.querySelectorAll('[data-tooltip]');
+            tooltipElements.forEach(element => {
+                element.addEventListener('mouseenter', function() {
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'tooltip';
+                    tooltip.textContent = this.dataset.tooltip;
+                    tooltip.style.position = 'absolute';
+                    tooltip.style.background = 'var(--primary-color)';
+                    tooltip.style.color = 'white';
+                    tooltip.style.padding = '0.5rem 1rem';
+                    tooltip.style.borderRadius = '4px';
+                    tooltip.style.fontSize = '0.9rem';
+                    tooltip.style.zIndex = '1000';
+                    tooltip.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                    
+                    document.body.appendChild(tooltip);
+                    
+                    const rect = this.getBoundingClientRect();
+                    tooltip.style.left = `${rect.left + rect.width/2}px`;
+                    tooltip.style.top = `${rect.top - 10}px`;
+                    tooltip.style.transform = 'translate(-50%, -100%)';
+                    
+                    this._tooltip = tooltip;
+                });
+                
+                element.addEventListener('mouseleave', function() {
+                    if (this._tooltip) {
+                        this._tooltip.remove();
+                        delete this._tooltip;
+                    }
+                });
+            });
+            
+            // Add animation to investment cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe investment cards
+            document.querySelectorAll('.investment-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+    
+</body>
+</html>

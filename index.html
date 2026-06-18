@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EFL Investment Platform | Home</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="container nav-container">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <span>EFL</span>Invest
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="currency.html"><i class="fas fa-exchange-alt"></i> Currency</a></li>
+                    <li><a href="investments.html"><i class="fas fa-piggy-bank"></i> Investments</a></li>
+                    <li><a href="qoutes.html"><i class="fas fa-file-invoice-dollar"></i> Quotes</a></li>
+                    <li><a href="profile.html"><i class="fas fa-user-circle"></i> Profile</a></li>
+                    <li>
+    <button id="themeToggle" class="theme-toggle-btn">
+        <i class="fas fa-moon"></i>
+    </button>
+</li>
+                </ul>
+                
+                <button class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <main class="container">
+            <section class="hero">
+                <h1>Smart Financial Solutions</h1>
+                <p class="subtitle">Professional investment planning and currency conversion tools developed by PDS Digital Solutions for Enomy-Finances Limited</p>
+                
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <h3>15,000+</h3>
+                        <p>Active Clients</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <h3>£2.5B+</h3>
+                        <p>Assets Managed</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-globe"></i>
+                        <h3>6</h3>
+                        <p>Currencies</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>100%</h3>
+                        <p>Secure Platform</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features">
+                <h2>Platform Features</h2>
+                <p class="section-description">Our comprehensive financial platform offers everything you need for smart investment decisions and currency management.</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h3>Currency Conversion</h3>
+                        <p>Convert between 6 major currencies with real-time rates and transparent fee calculations. Minimum transaction: 300, Maximum: 5000.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <h3>Investment Planning</h3>
+                        <p>Three tailored investment plans with detailed projections for 1, 5, and 10 year periods. Choose based on your risk tolerance.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h3>Detailed Quotes</h3>
+                        <p>Personalized investment quotes showing returns, fees, taxes, and profit calculations. Save and compare different scenarios.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h3>Secure Data Storage</h3>
+                        <p>Bank-level security for all user data, transactions, and saved quotes. Automatic error logging and graceful failure handling.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="quick-actions">
+                <h2>Get Started</h2>
+                <p class="section-description">Begin your financial journey with our powerful tools</p>
+                
+                <div class="action-buttons">
+                    <a href="currency.html" class="btn btn-primary">
+                        <i class="fas fa-exchange-alt"></i> Currency Converter
+                    </a>
+                    <a href="investments.html" class="btn btn-secondary">
+                        <i class="fas fa-piggy-bank"></i> View Investment Plans
+                    </a>
+                    <a href="quotes.html" class="btn btn-outline">
+                        <i class="fas fa-file-invoice-dollar"></i> Generate Quote
+                    </a>
+                </div>
+            </section>
+
+            <!-- Investment Plans Preview -->
+            <section class="features">
+                <h2>Investment Options</h2>
+                <p class="section-description">Choose from our three carefully designed investment plans</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-success);">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3>Basic Savings Plan</h3>
+                        <p><strong>Returns:</strong> 1.2% - 2.4% annually<br>
+                           <strong>Fees:</strong> 0.25% monthly<br>
+                           <strong>Tax:</strong> 0% on all profits<br>
+                           <strong>Risk:</strong> Low</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-warning);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Savings Plan Plus</h3>
+                        <p><strong>Returns:</strong> 3% - 5.5% annually<br>
+                           <strong>Fees:</strong> 0.3% monthly<br>
+                           <strong>Tax:</strong> 10% on profits above £12,000<br>
+                           <strong>Risk:</strong> Medium</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-primary);">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3>Managed Stock Investments</h3>
+                        <p><strong>Returns:</strong> 4% - 23% annually<br>
+                           <strong>Fees:</strong> 1.3% monthly<br>
+                           <strong>Tax:</strong> 10% (>£12k) + 20% (>£40k)<br>
+                           <strong>Risk:</strong> High</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>EFL Invest Platform</h4>
+                        <p>Professional financial tools developed by PDS Digital Solutions for Enomy-Finances Limited.</p>
+                        <div class="footer-social">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                            <li><a href="currency.html"><i class="fas fa-chevron-right"></i> Currency Converter</a></li>
+                            <li><a href="investments.html"><i class="fas fa-chevron-right"></i> Investment Plans</a></li>
+                            <li><a href="quotes.html"><i class="fas fa-chevron-right"></i> Quotes</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Cookie Policy</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Compliance</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Contact</h4>
+                        <p><i class="fas fa-envelope"></i> support@eflinvest.com</p>
+                        <p><i class="fas fa-phone"></i> +44 20 7123 4567</p>
+                        <p><i class="fas fa-map-marker-alt"></i> London, United Kingdom</p>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2025 EFL Investment Platform. Developed by PDS Digital Solutions. All rights reserved.</p>
+                    <p class="system-status">
+                        <i class="fas fa-circle status-online"></i> System Status: <strong>Operational</strong>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Error Modal -->
+        <div class="modal" id="errorModal">
+            <div class="modal-content">
+                <div class="modal-header error">
+                    <h3><i class="fas fa-exclamation-triangle"></i> System Error</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="errorMessage">An unexpected error has occurred. Please try again later.</p>
+                    <div class="error-actions">
+                        <button class="btn btn-primary" id="retryButton">Retry</button>
+                        <button class="btn btn-outline" id="reportButton">Report Issue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Toast -->
+        <div class="toast" id="successToast">
+            <div class="toast-content">
+                <i class="fas fa-check-circle toast-icon"></i>
+                <div class="toast-message">Operation completed successfully!</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script src="script.js"></script>
+    
+</body>
+</html>

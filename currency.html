@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter | EFL Investment Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Currency Page Specific Styles */
+        .currency-hero {
+            background: linear-gradient(135deg, rgba(26, 54, 93, 0.1) 0%, rgba(45, 116, 218, 0.1) 100%);
+            padding: 4rem 0;
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .currency-hero h1 {
+            margin-bottom: 1rem;
+        }
+        
+        .converter-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+        
+        @media (max-width: 992px) {
+            .converter-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .converter-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(0, 180, 216, 0.1);
+        }
+        
+        .input-group {
+            margin-bottom: 2rem;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .input-with-icon input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.1);
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+        }
+        
+        .input-hint {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+        
+        .input-error {
+            border-color: var(--danger-color) !important;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .currency-selectors {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1.5rem;
+            align-items: end;
+            margin-bottom: 2.5rem;
+        }
+        
+        .currency-selector {
+            flex: 1;
+        }
+        
+        .currency-selector label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .currency-selector select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            background: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .currency-selector select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .swap-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .converter-results {
+            background: linear-gradient(135deg, rgba(248, 249, 250, 0.8) 0%, rgba(233, 236, 239, 0.8) 100%);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .result-row:last-child {
+            border-bottom: none;
+        }
+        
+        .result-row.total {
+            border-top: 2px solid var(--accent-color);
+            margin-top: 0.5rem;
+            padding-top: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .result-value {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        
+        .result-row.total .result-value {
+            font-size: 1.4rem;
+            color: var(--secondary-color);
+        }
+        
+        .fee-info {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .fee-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        .fee-table th {
+            background: var(--light-gray);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .fee-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .fee-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .fee-table tr:hover {
+            background: rgba(0, 180, 216, 0.05);
+        }
+        
+        .note {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .conversion-history {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .history-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 1.5rem 0;
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            background: var(--light-gray);
+            margin-bottom: 0.75rem;
+            transition: var(--transition);
+        }
+        
+        .history-item:hover {
+            background: rgba(0, 180, 216, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .history-amount {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .history-details {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+        
+        .history-date {
+            font-size: 0.85rem;
+            color: var(--gray-color);
+        }
+        
+        .empty-history {
+            text-align: center;
+            color: var(--gray-color);
+            padding: 2rem;
+        }
+        
+        .currency-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .currency-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .currency-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .currency-flag {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .currency-code {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        
+        .currency-name {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="container nav-container">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <span>EFL</span>Invest
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="currency.html" class="active"><i class="fas fa-exchange-alt"></i> Currency</a></li>
+                    <li><a href="investments.html"><i class="fas fa-piggy-bank"></i> Investments</a></li>
+                    <li><a href="quotes.html"><i class="fas fa-file-invoice-dollar"></i> Quotes</a></li>
+                    <li><a href="profile.html"><i class="fas fa-user-circle"></i> Profile</a></li>
+                    <li>
+                        <button id="themeToggle" class="theme-toggle-btn">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </li>
+                </ul>
+                
+                <button class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <main class="container">
+            <section class="currency-hero">
+                <h1>Currency Converter</h1>
+                <p class="subtitle">Convert between 6 major currencies with real-time exchange rates and transparent fee structure</p>
+            </section>
+
+            <!-- Converter Section -->
+            <div class="converter-container">
+                <div class="converter-card">
+                    <h2><i class="fas fa-calculator"></i> Convert Currency</h2>
+                    <p class="section-description">Enter amount and select currencies to convert</p>
+                    
+                    <div class="input-group">
+                        <label for="amount">Amount to Convert</label>
+                        <div class="input-with-icon">
+                            <input type="number" id="amount" placeholder="Enter amount" min="300" max="5000" step="0.01" value="1000">
+                            <span class="input-icon" id="amountSymbol">£</span>
+                        </div>
+                        <div class="input-hint">Minimum: 300, Maximum: 5000</div>
+                        <div class="error-message" id="amountError">Please enter an amount between 300 and 5000</div>
+                    </div>
+
+                    <div class="currency-selectors">
+                        <div class="currency-selector">
+                            <label for="fromCurrency">From Currency</label>
+                            <select id="fromCurrency">
+                                <option value="GBP">British Pound (GBP)</option>
+                                <option value="USD">US Dollar (USD)</option>
+                                <option value="EUR">Euro (EUR)</option>
+                                <option value="BRL">Brazilian Real (BRL)</option>
+                                <option value="JPY">Japanese Yen (JPY)</option>
+                                <option value="TRY">Turkish Lira (TRY)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="swap-button">
+                            <button id="swapCurrencies" class="btn-icon">
+                                <i class="fas fa-exchange-alt"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="currency-selector">
+                            <label for="toCurrency">To Currency</label>
+                            <select id="toCurrency">
+                                <option value="USD">US Dollar (USD)</option>
+                                <option value="GBP">British Pound (GBP)</option>
+                                <option value="EUR">Euro (EUR)</option>
+                                <option value="BRL">Brazilian Real (BRL)</option>
+                                <option value="JPY">Japanese Yen (JPY)</option>
+                                <option value="TRY">Turkish Lira (TRY)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="converter-results">
+                        <div class="result-row">
+                            <span>Converted Amount:</span>
+                            <span id="convertedAmount" class="result-value">0.00</span>
+                        </div>
+                        <div class="result-row">
+                            <span>Conversion Fee:</span>
+                            <span id="conversionFee" class="result-value">0.00 USD</span>
+                        </div>
+                        <div class="result-row total">
+                            <span>Total Cost:</span>
+                            <span id="totalCost" class="result-value">0.00</span>
+                        </div>
+                    </div>
+
+                    <button id="convertButton" class="btn btn-primary btn-block">
+                        <i class="fas fa-calculator"></i> Calculate Conversion
+                    </button>
+                    
+                    <div class="fee-info">
+                        <h4><i class="fas fa-info-circle"></i> Conversion Fee Structure</h4>
+                        <table class="fee-table">
+                            <thead>
+                                <tr>
+                                    <th>Transaction Amount</th>
+                                    <th>Fee Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Up to 500</td>
+                                    <td>3.5%</td>
+                                </tr>
+                                <tr>
+                                    <td>500 - 1500</td>
+                                    <td>2.7%</td>
+                                </tr>
+                                <tr>
+                                    <td>1500 - 2500</td>
+                                    <td>2.0%</td>
+                                </tr>
+                                <tr>
+                                    <td>Over 2500</td>
+                                    <td>1.5%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p class="note"><i class="fas fa-exclamation-circle"></i> All fees are converted to USD at current exchange rates.</p>
+                    </div>
+                </div>
+
+                <div class="conversion-history">
+                    <h3><i class="fas fa-history"></i> Recent Conversions</h3>
+                    <div id="historyList" class="history-list">
+                        <!-- History will be loaded here -->
+                    </div>
+                    <button id="clearHistory" class="btn btn-outline btn-small">
+                        <i class="fas fa-trash-alt"></i> Clear History
+                    </button>
+                </div>
+            </div>
+
+            <!-- Supported Currencies -->
+            <section class="features">
+                <h2>Supported Currencies</h2>
+                <p class="section-description">We support conversion between these major world currencies</p>
+                
+                <div class="currency-cards">
+                    <div class="currency-card">
+                        <div class="currency-flag">🇬🇧</div>
+                        <div class="currency-code">GBP</div>
+                        <div class="currency-name">British Pound</div>
+                        <div class="currency-rate" data-currency="GBP">Base Currency</div>
+                    </div>
+                    <div class="currency-card">
+                        <div class="currency-flag">🇺🇸</div>
+                        <div class="currency-code">USD</div>
+                        <div class="currency-name">US Dollar</div>
+                        <div class="currency-rate" data-currency="USD">1 GBP = 1.25 USD</div>
+                    </div>
+                    <div class="currency-card">
+                        <div class="currency-flag">🇪🇺</div>
+                        <div class="currency-code">EUR</div>
+                        <div class="currency-name">Euro</div>
+                        <div class="currency-rate" data-currency="EUR">1 GBP = 1.17 EUR</div>
+                    </div>
+                    <div class="currency-card">
+                        <div class="currency-flag">🇧🇷</div>
+                        <div class="currency-code">BRL</div>
+                        <div class="currency-name">Brazilian Real</div>
+                        <div class="currency-rate" data-currency="BRL">1 GBP = 6.20 BRL</div>
+                    </div>
+                    <div class="currency-card">
+                        <div class="currency-flag">🇯🇵</div>
+                        <div class="currency-code">JPY</div>
+                        <div class="currency-name">Japanese Yen</div>
+                        <div class="currency-rate" data-currency="JPY">1 GBP = 185.50 JPY</div>
+                    </div>
+                    <div class="currency-card">
+                        <div class="currency-flag">🇹🇷</div>
+                        <div class="currency-code">TRY</div>
+                        <div class="currency-name">Turkish Lira</div>
+                        <div class="currency-rate" data-currency="TRY">1 GBP = 40.80 TRY</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>EFL Invest Platform</h4>
+                        <p>Professional financial tools developed by PDS Digital Solutions for Enomy-Finances Limited.</p>
+                        <div class="footer-social">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                            <li><a href="currency.html"><i class="fas fa-chevron-right"></i> Currency Converter</a></li>
+                            <li><a href="investments.html"><i class="fas fa-chevron-right"></i> Investment Plans</a></li>
+                            <li><a href="quotes.html"><i class="fas fa-chevron-right"></i> Quotes</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Cookie Policy</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Compliance</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Contact</h4>
+                        <p><i class="fas fa-envelope"></i> support@eflinvest.com</p>
+                        <p><i class="fas fa-phone"></i> +44 20 7123 4567</p>
+                        <p><i class="fas fa-map-marker-alt"></i> London, United Kingdom</p>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2025 EFL Investment Platform. Developed by PDS Digital Solutions. All rights reserved.</p>
+                    <p class="system-status">
+                        <i class="fas fa-circle status-online"></i> System Status: <strong>Operational</strong>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Error Modal -->
+        <div class="modal" id="errorModal">
+            <div class="modal-content">
+                <div class="modal-header error">
+                    <h3><i class="fas fa-exclamation-triangle"></i> System Error</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="errorMessage">An unexpected error has occurred. Please try again later.</p>
+                    <div class="error-actions">
+                        <button class="btn btn-primary" id="retryButton">Retry</button>
+                        <button class="btn btn-outline" id="reportButton">Report Issue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Toast -->
+        <div class="toast" id="successToast">
+            <div class="toast-content">
+                <i class="fas fa-check-circle toast-icon"></i>
+                <div class="toast-message">Operation completed successfully!</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        // Currency Converter JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const amountInput = document.getElementById('amount');
+            const fromCurrency = document.getElementById('fromCurrency');
+            const toCurrency = document.getElementById('toCurrency');
+            const swapButton = document.getElementById('swapCurrencies');
+            const convertButton = document.getElementById('convertButton');
+            const amountSymbol = document.getElementById('amountSymbol');
+            const convertedAmount = document.getElementById('convertedAmount');
+            const conversionFee = document.getElementById('conversionFee');
+            const totalCost = document.getElementById('totalCost');
+            const historyList = document.getElementById('historyList');
+            const clearHistory = document.getElementById('clearHistory');
+            const amountError = document.getElementById('amountError');
+            
+            // Currency symbols mapping
+            const currencySymbols = {
+                'GBP': '£',
+                'USD': '$',
+                'EUR': '€',
+                'BRL': 'R$',
+                'JPY': '¥',
+                'TRY': '₺'
+            };
+            
+            // Currency names mapping
+            const currencyNames = {
+                'GBP': 'British Pound',
+                'USD': 'US Dollar',
+                'EUR': 'Euro',
+                'BRL': 'Brazilian Real',
+                'JPY': 'Japanese Yen',
+                'TRY': 'Turkish Lira'
+            };
+            
+            // Exchange rates (based on GBP as base currency)
+            // These are mock rates - in a real app, you would fetch these from an API
+            const exchangeRates = {
+                'GBP': { 'GBP': 1, 'USD': 1.25, 'EUR': 1.17, 'BRL': 6.20, 'JPY': 185.50, 'TRY': 40.80 },
+                'USD': { 'GBP': 0.80, 'USD': 1, 'EUR': 0.93, 'BRL': 4.96, 'JPY': 148.40, 'TRY': 32.64 },
+                'EUR': { 'GBP': 0.85, 'USD': 1.07, 'EUR': 1, 'BRL': 5.30, 'JPY': 158.55, 'TRY': 34.87 },
+                'BRL': { 'GBP': 0.16, 'USD': 0.20, 'EUR': 0.19, 'BRL': 1, 'JPY': 29.92, 'TRY': 6.58 },
+                'JPY': { 'GBP': 0.0054, 'USD': 0.0067, 'EUR': 0.0063, 'BRL': 0.033, 'JPY': 1, 'TRY': 0.22 },
+                'TRY': { 'GBP': 0.0245, 'USD': 0.0306, 'EUR': 0.0287, 'BRL': 0.152, 'JPY': 4.55, 'TRY': 1 }
+            };
+            
+            // Update currency symbol when fromCurrency changes
+            fromCurrency.addEventListener('change', function() {
+                const symbol = currencySymbols[this.value] || '£';
+                amountSymbol.textContent = symbol;
+                calculateConversion();
+            });
+            
+            // Swap currencies
+            swapButton.addEventListener('click', function() {
+                const temp = fromCurrency.value;
+                fromCurrency.value = toCurrency.value;
+                toCurrency.value = temp;
+                
+                const symbol = currencySymbols[fromCurrency.value] || '£';
+                amountSymbol.textContent = symbol;
+                
+                calculateConversion();
+            });
+            
+            // Validate amount
+            function validateAmount() {
+                const amount = parseFloat(amountInput.value) || 0;
+                amountInput.classList.remove('input-error');
+                amountError.style.display = 'none';
+                
+                if (amount < 300 || amount > 5000) {
+                    amountInput.classList.add('input-error');
+                    amountError.style.display = 'block';
+                    return false;
+                }
+                
+                if (isNaN(amount) || amount <= 0) {
+                    amountInput.classList.add('input-error');
+                    amountError.textContent = 'Please enter a valid amount';
+                    amountError.style.display = 'block';
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            // Calculate conversion fee based on amount
+            function calculateFee(amount) {
+                if (amount <= 500) return amount * 0.035;
+                if (amount <= 1500) return amount * 0.027;
+                if (amount <= 2500) return amount * 0.02;
+                return amount * 0.015;
+            }
+            
+            // Format currency
+            function formatCurrency(amount, currency) {
+                const symbol = currencySymbols[currency] || '';
+                const formatted = new Intl.NumberFormat('en-GB', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }).format(amount);
+                
+                return `${symbol}${formatted}`;
+            }
+            
+            // Calculate conversion
+            function calculateConversion() {
+                if (!validateAmount()) {
+                    return;
+                }
+                
+                const amount = parseFloat(amountInput.value);
+                const from = fromCurrency.value;
+                const to = toCurrency.value;
+                
+                // Get exchange rate
+                const rate = exchangeRates[from]?.[to] || 1;
+                
+                // Calculate converted amount
+                const converted = amount * rate;
+                
+                // Calculate fee (in original currency)
+                const feeInOriginalCurrency = calculateFee(amount);
+                
+                // Convert fee to USD for display
+                const feeInUSD = feeInOriginalCurrency * (exchangeRates[from]?.['USD'] || 1);
+                
+                // Update display
+                convertedAmount.textContent = formatCurrency(converted, to);
+                conversionFee.textContent = formatCurrency(feeInUSD, 'USD');
+                totalCost.textContent = formatCurrency(amount, from);
+                
+                // Add to history
+                addToHistory(amount, from, to, converted, feeInUSD);
+                
+                // Show success message
+                showToast('Conversion calculated successfully!');
+            }
+            
+            // Add conversion to history
+            function addToHistory(amount, from, to, converted, fee) {
+                const history = JSON.parse(localStorage.getItem('conversionHistory') || '[]');
+                const historyItem = {
+                    amount,
+                    from,
+                    to,
+                    converted,
+                    fee,
+                    date: new Date().toISOString()
+                };
+                
+                history.unshift(historyItem); // Add to beginning
+                localStorage.setItem('conversionHistory', JSON.stringify(history.slice(0, 10))); // Keep last 10
+                updateHistoryDisplay();
+            }
+            
+            // Update history display
+            function updateHistoryDisplay() {
+                const history = JSON.parse(localStorage.getItem('conversionHistory') || '[]');
+                
+                if (history.length === 0) {
+                    historyList.innerHTML = '<div class="empty-history">No conversion history yet</div>';
+                    return;
+                }
+                
+                historyList.innerHTML = history.map(item => {
+                    const date = new Date(item.date);
+                    const formattedDate = date.toLocaleDateString('en-GB', {
+                        weekday: 'short',
+                        day: 'numeric',
+                        month: 'short',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
+                    return `
+                        <div class="history-item">
+                            <div>
+                                <div class="history-amount">${formatCurrency(item.amount, item.from)} → ${item.to}</div>
+                                <div class="history-details">
+                                    Result: ${formatCurrency(item.converted, item.to)} | 
+                                    Fee: ${formatCurrency(item.fee, 'USD')}
+                                </div>
+                            </div>
+                            <div class="history-date">${formattedDate}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            // Clear history
+            clearHistory.addEventListener('click', function() {
+                if (confirm('Are you sure you want to clear all conversion history?')) {
+                    localStorage.removeItem('conversionHistory');
+                    updateHistoryDisplay();
+                    showToast('History cleared successfully!');
+                }
+            });
+            
+            // Show toast message
+            function showToast(message) {
+                const toast = document.getElementById('successToast');
+                const toastMessage = document.querySelector('.toast-message');
+                
+                if (toast && toastMessage) {
+                    toastMessage.textContent = message;
+                    toast.classList.add('active');
+                    
+                    setTimeout(() => {
+                        toast.classList.remove('active');
+                    }, 3000);
+                }
+            }
+            
+            // Show error message
+            function showError(message) {
+                const modal = document.getElementById('errorModal');
+                const errorMessage = document.getElementById('errorMessage');
+                
+                if (modal && errorMessage) {
+                    errorMessage.textContent = message;
+                    modal.classList.add('active');
+                    
+                    // Close modal when clicking X or outside
+                    const closeModal = () => modal.classList.remove('active');
+                    
+                    document.querySelector('.modal-close')?.addEventListener('click', closeModal);
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) closeModal();
+                    });
+                    
+                    // Retry button
+                    document.getElementById('retryButton')?.addEventListener('click', () => {
+                        closeModal();
+                        calculateConversion();
+                    });
+                }
+            }
+            
+            // Event listeners
+            amountInput.addEventListener('input', calculateConversion);
+            fromCurrency.addEventListener('change', calculateConversion);
+            toCurrency.addEventListener('change', calculateConversion);
+            convertButton.addEventListener('click', calculateConversion);
+            
+            // Validate amount on blur
+            amountInput.addEventListener('blur', function() {
+                const value = parseFloat(this.value);
+                if (value < 300) {
+                    this.value = 300;
+                    showToast('Minimum amount set to 300');
+                } else if (value > 5000) {
+                    this.value = 5000;
+                    showToast('Maximum amount set to 5000');
+                }
+                calculateConversion();
+            });
+            
+            // Allow Enter key to calculate
+            amountInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    calculateConversion();
+                }
+            });
+            
+            // Initialize
+            calculateConversion();
+            updateHistoryDisplay();
+            
+            // Update currency rates display
+            document.querySelectorAll('.currency-rate').forEach(element => {
+                const currency = element.dataset.currency;
+                if (currency !== 'GBP') {
+                    const rate = exchangeRates['GBP'][currency];
+                    element.textContent = `1 GBP = ${rate.toFixed(2)} ${currency}`;
+                }
+            });
+            
+            // Dark mode toggle
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                document.body.classList.toggle('dark-theme', savedTheme === 'dark');
+                
+                themeToggle.innerHTML = savedTheme === 'dark' 
+                    ? '<i class="fas fa-sun"></i>' 
+                    : '<i class="fas fa-moon"></i>';
+                
+                themeToggle.addEventListener('click', function() {
+                    const isDark = document.body.classList.toggle('dark-theme');
+                    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                    this.innerHTML = isDark 
+                        ? '<i class="fas fa-sun"></i>' 
+                        : '<i class="fas fa-moon"></i>';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

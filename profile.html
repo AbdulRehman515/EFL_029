@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | EFL Investment Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Profile Page Specific Styles */
+        .profile-hero {
+            background: linear-gradient(135deg, rgba(255, 158, 0, 0.1) 0%, rgba(42, 157, 143, 0.1) 100%);
+            padding: 4rem 0;
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .profile-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+        
+        @media (max-width: 992px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .profile-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .user-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+        
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2.5rem;
+        }
+        
+        .user-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .user-email {
+            color: var(--gray-color);
+            margin-bottom: 1.5rem;
+        }
+        
+        .user-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .user-stat {
+            background: var(--light-gray);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        
+        .user-stat span {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-stat strong {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .profile-menu {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+        
+        .profile-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            padding: 1.25rem 1.5rem;
+            background: none;
+            border: none;
+            text-align: left;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            color: var(--gray-color);
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+        }
+        
+        .profile-menu-item:hover {
+            background: rgba(0, 180, 216, 0.05);
+            color: var(--primary-color);
+        }
+        
+        .profile-menu-item.active {
+            background: rgba(0, 180, 216, 0.1);
+            color: var(--secondary-color);
+            border-left-color: var(--accent-color);
+            font-weight: 600;
+        }
+        
+        .profile-content {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: 2.5rem;
+        }
+        
+        .profile-tab {
+            display: none;
+        }
+        
+        .profile-tab.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .checkbox-group label {
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+        
+        .password-requirements {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+        }
+        
+        .password-requirements ul {
+            margin: 0.5rem 0 0 1.5rem;
+        }
+        
+        .password-requirements li {
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+        
+        .security-actions {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .system-error-log {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--danger-color);
+            display: none;
+        }
+        
+        .error-log-content {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+        }
+        
+        .error-log-item {
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: white;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--danger-color);
+        }
+        
+        .error-time {
+            font-size: 0.85rem;
+            color: var(--gray-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .error-message {
+            font-weight: 500;
+            color: var(--danger-color);
+            margin-bottom: 0.25rem;
+        }
+        
+        .error-url {
+            font-size: 0.85rem;
+            color: var(--gray-color);
+        }
+        
+        .activity-log {
+            margin-top: 3rem;
+        }
+        
+        .activity-list {
+            margin-top: 1rem;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--light-gray);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+        }
+        
+        .activity-details {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+        
+        .activity-time {
+            font-size: 0.85rem;
+            color: var(--gray-color);
+        }
+        
+        .account-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success-color);
+        }
+        
+        .status-indicator.verified {
+            background: var(--success-color);
+        }
+        
+        .status-indicator.pending {
+            background: var(--warning-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="container nav-container">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <span>EFL</span>Invest
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="currency.html"><i class="fas fa-exchange-alt"></i> Currency</a></li>
+                    <li><a href="investments.html"><i class="fas fa-piggy-bank"></i> Investments</a></li>
+                    <li><a href="qoutes.html"><i class="fas fa-file-invoice-dollar"></i> Quotes</a></li>
+                    <li><a href="profile.html" class="active"><i class="fas fa-user-circle"></i> Profile</a></li>
+                    <li>
+    <button id="themeToggle" class="theme-toggle-btn">
+        <i class="fas fa-moon"></i>
+    </button>
+</li>
+                </ul>
+                
+                <button class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <main class="container">
+            <section class="profile-hero">
+                <h1>Account Profile</h1>
+                <p class="subtitle">Manage your personal information, security settings, and preferences</p>
+            </section>
+
+            <!-- Profile Content -->
+            <div class="profile-container">
+                <!-- Sidebar -->
+                <div class="profile-sidebar">
+                    <div class="user-card">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3 id="userName">John Smith</h3>
+                        <p class="user-email" id="userEmail">john.smith@example.com</p>
+                        
+                        <div class="account-status">
+                            <div class="status-indicator verified"></div>
+                            <span>Account Verified</span>
+                        </div>
+                        
+                        <div class="user-stats">
+                            <div class="user-stat">
+                                <span>Quotes Saved</span>
+                                <strong id="quotesCount">0</strong>
+                            </div>
+                            <div class="user-stat">
+                                <span>Conversions</span>
+                                <strong id="conversionsCount">0</strong>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-menu">
+                        <button class="profile-menu-item active" data-tab="personal">
+                            <i class="fas fa-user-edit"></i> Personal Info
+                        </button>
+                        <button class="profile-menu-item" data-tab="security">
+                            <i class="fas fa-shield-alt"></i> Security
+                        </button>
+                        <button class="profile-menu-item" data-tab="preferences">
+                            <i class="fas fa-cog"></i> Preferences
+                        </button>
+                        <button class="profile-menu-item" data-tab="activity">
+                            <i class="fas fa-history"></i> Activity Log
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Content -->
+                <div class="profile-content">
+                    <!-- Personal Info Tab -->
+                    <div class="profile-tab active" id="personalTab">
+                        <h2><i class="fas fa-user-edit"></i> Personal Information</h2>
+                        <p class="section-description">Update your personal details and contact information</p>
+                        
+                        <form id="personalForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" id="firstName" value="John" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" id="lastName" value="Smith" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" value="john.smith@example.com" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" value="+44 7123 456789">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <textarea id="address" rows="3">123 Finance Street, London, UK</textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="dateOfBirth">Date of Birth</label>
+                                <input type="date" id="dateOfBirth" value="1985-06-15">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Security Tab -->
+                    <div class="profile-tab" id="securityTab">
+                        <h2><i class="fas fa-shield-alt"></i> Security Settings</h2>
+                        <p class="section-description">Manage your password and security preferences</p>
+                        
+                        <form id="securityForm">
+                            <div class="form-group">
+                                <label for="currentPassword">Current Password</label>
+                                <input type="password" id="currentPassword" placeholder="Enter current password">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" id="newPassword" placeholder="Enter new password">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" placeholder="Confirm new password">
+                            </div>
+                            
+                            <div class="password-requirements">
+                                <p><strong>Password Requirements:</strong></p>
+                                <ul>
+                                    <li>At least 8 characters long</li>
+                                    <li>At least one uppercase letter</li>
+                                    <li>At least one lowercase letter</li>
+                                    <li>At least one number</li>
+                                    <li>At least one special character (!@#$%^&*)</li>
+                                </ul>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-key"></i> Update Password
+                            </button>
+                        </form>
+                        
+                        <div class="security-actions">
+                            <h3>Additional Security</h3>
+                            <button class="btn btn-outline" id="enable2FA">
+                                <i class="fas fa-mobile-alt"></i> Enable Two-Factor Authentication
+                            </button>
+                            <button class="btn btn-outline" id="viewSessions">
+                                <i class="fas fa-desktop"></i> View Active Sessions
+                            </button>
+                            <button class="btn btn-outline" id="logoutAll">
+                                <i class="fas fa-sign-out-alt"></i> Logout All Devices
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Preferences Tab -->
+                    <div class="profile-tab" id="preferencesTab">
+                        <h2><i class="fas fa-cog"></i> Preferences</h2>
+                        <p class="section-description">Customize your platform experience</p>
+                        
+                        <form id="preferencesForm">
+                            <div class="form-group">
+                                <label for="defaultCurrency">Default Currency</label>
+                                <select id="defaultCurrency">
+                                    <option value="GBP">British Pound (GBP)</option>
+                                    <option value="USD">US Dollar (USD)</option>
+                                    <option value="EUR">Euro (EUR)</option>
+                                    <option value="JPY">Japanese Yen (JPY)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="language">Language</label>
+                                <select id="language">
+                                    <option value="en">English</option>
+                                    <option value="fr">French</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="de">German</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="timezone">Timezone</label>
+                                <select id="timezone">
+                                    <option value="GMT">GMT (London)</option>
+                                    <option value="EST">EST (New York)</option>
+                                    <option value="CET">CET (Paris)</option>
+                                    <option value="JST">JST (Tokyo)</option>
+                                </select>
+                            </div>
+                            
+                            <h3 style="margin-top: 2rem;">Notification Preferences</h3>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="emailNotifications" checked>
+                                <label for="emailNotifications">Receive email notifications</label>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="smsNotifications">
+                                <label for="smsNotifications">Receive SMS notifications</label>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="marketUpdates" checked>
+                                <label for="marketUpdates">Receive market updates</label>
+                            </div>
+                            
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="marketingEmails">
+                                <label for="marketingEmails">Receive marketing emails</label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Preferences
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- Activity Log Tab -->
+                    <div class="profile-tab" id="activityTab">
+                        <h2><i class="fas fa-history"></i> Activity Log</h2>
+                        <p class="section-description">Recent activity on your account</p>
+                        
+                        <div class="activity-log">
+                            <div class="activity-list">
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-sign-in-alt"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Account Login</div>
+                                        <div class="activity-time">Today, 14:30 • From Chrome on Windows</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-file-invoice-dollar"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Quote Generated</div>
+                                        <div class="activity-time">Today, 14:15 • Savings Plan Plus quote saved</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Currency Conversion</div>
+                                        <div class="activity-time">Yesterday, 11:20 • Converted 1,000 GBP to USD</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-user-edit"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Profile Updated</div>
+                                        <div class="activity-time">2 days ago • Contact information updated</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <div class="activity-title">Security Update</div>
+                                        <div class="activity-time">1 week ago • Password changed successfully</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-outline" style="margin-top: 2rem;">
+                                <i class="fas fa-download"></i> Download Full Activity Log
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Error Log -->
+                    <div class="system-error-log" id="errorLog">
+                        <h3><i class="fas fa-exclamation-triangle"></i> System Error Log</h3>
+                        <p class="section-description">Technical errors encountered by the system</p>
+                        <div class="error-log-content">
+                            <div class="error-log-item">
+                                <div class="error-time">Today, 14:32</div>
+                                <div class="error-message">Database connection timeout</div>
+                                <div class="error-url">/quotes.html</div>
+                            </div>
+                            <div class="error-log-item">
+                                <div class="error-time">Yesterday, 11:15</div>
+                                <div class="error-message">API rate limit exceeded</div>
+                                <div class="error-url">/currency.html</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline" id="clearErrorLog" style="margin-top: 1rem;">
+                            <i class="fas fa-trash-alt"></i> Clear Error Log
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Status -->
+            <section class="features">
+                <h2>Account Status</h2>
+                <p class="section-description">Your account verification and security status</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-success);">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>Email Verified</h3>
+                        <p>Your email address has been verified and is secure</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-warning);">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3>2FA Disabled</h3>
+                        <p>Enable two-factor authentication for enhanced security</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-primary);">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Account Secure</h3>
+                        <p>Your account meets all security requirements</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon" style="background: var(--gradient-accent);">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <h3>Active History</h3>
+                        <p>Account activity monitoring is enabled</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>EFL Invest Platform</h4>
+                        <p>Professional financial tools developed by PDS Digital Solutions for Enomy-Finances Limited.</p>
+                        <div class="footer-social">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                            <li><a href="currency.html"><i class="fas fa-chevron-right"></i> Currency Converter</a></li>
+                            <li><a href="investments.html"><i class="fas fa-chevron-right"></i> Investment Plans</a></li>
+                            <li><a href="qoutes.html"><i class="fas fa-chevron-right"></i> Quotes</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Cookie Policy</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Compliance</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Contact</h4>
+                        <p><i class="fas fa-envelope"></i> support@eflinvest.com</p>
+                        <p><i class="fas fa-phone"></i> +44 20 7123 4567</p>
+                        <p><i class="fas fa-map-marker-alt"></i> London, United Kingdom</p>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2025 EFL Investment Platform. Developed by PDS Digital Solutions. All rights reserved.</p>
+                    <p class="system-status">
+                        <i class="fas fa-circle status-online"></i> System Status: <strong>Operational</strong>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Error Modal -->
+        <div class="modal" id="errorModal">
+            <div class="modal-content">
+                <div class="modal-header error">
+                    <h3><i class="fas fa-exclamation-triangle"></i> System Error</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="errorMessage">An unexpected error has occurred. Please try again later.</p>
+                    <div class="error-actions">
+                        <button class="btn btn-primary" id="retryButton">Retry</button>
+                        <button class="btn btn-outline" id="reportButton">Report Issue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Toast -->
+        <div class="toast" id="successToast">
+            <div class="toast-content">
+                <i class="fas fa-check-circle toast-icon"></i>
+                <div class="toast-message">Operation completed successfully!</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Profile Page Specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user data counts
+            updateUserCounts();
+            
+            // Profile tabs
+            const tabButtons = document.querySelectorAll('.profile-menu-item');
+            const tabs = document.querySelectorAll('.profile-tab');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.dataset.tab;
+                    
+                    // Update active tab button
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show selected tab
+                    tabs.forEach(tab => {
+                        tab.classList.remove('active');
+                        if (tab.id === `${tabId}Tab`) {
+                            tab.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Update user counts
+            function updateUserCounts() {
+                const savedQuotes = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+                const conversionHistory = JSON.parse(localStorage.getItem('conversionHistory') || '[]');
+                
+                document.getElementById('quotesCount').textContent = savedQuotes.length;
+                document.getElementById('conversionsCount').textContent = conversionHistory.length;
+            }
+            
+            // Clear error log
+            const clearErrorLog = document.getElementById('clearErrorLog');
+            if (clearErrorLog) {
+                clearErrorLog.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to clear the error log?')) {
+                        localStorage.removeItem('systemErrors');
+                        document.querySelector('.error-log-content').innerHTML = 
+                            '<p>No system errors recorded.</p>';
+                        if (window.shared) {
+                            window.shared.showToast('Error log cleared successfully!');
+                        }
+                    }
+                });
+            }
+            
+            // Logout all devices
+            const logoutAll = document.getElementById('logoutAll');
+            if (logoutAll) {
+                logoutAll.addEventListener('click', function() {
+                    if (confirm('This will log you out of all devices. Continue?')) {
+                        // In a real app, this would call an API
+                        if (window.shared) {
+                            window.shared.showToast('Logged out of all devices successfully!');
+                        }
+                    }
+                });
+            }
+            
+            // View sessions
+            const viewSessions = document.getElementById('viewSessions');
+            if (viewSessions) {
+                viewSessions.addEventListener('click', function() {
+                    const modal = document.createElement('div');
+                    modal.className = 'modal active';
+                    modal.innerHTML = `
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3><i class="fas fa-desktop"></i> Active Sessions</h3>
+                                <button class="modal-close">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Active sessions on your account:</p>
+                                <div class="activity-list" style="margin: 1rem 0;">
+                                    <div class="activity-item">
+                                        <div class="activity-icon">
+                                            <i class="fab fa-chrome"></i>
+                                        </div>
+                                        <div class="activity-details">
+                                            <div class="activity-title">Chrome on Windows</div>
+                                            <div class="activity-time">Currently active • London, UK</div>
+                                        </div>
+                                        <button class="btn btn-outline btn-small">
+                                            <i class="fas fa-sign-out-alt"></i> Logout
+                                        </button>
+                                    </div>
+                                    <div class="activity-item">
+                                        <div class="activity-icon">
+                                            <i class="fab fa-safari"></i>
+                                        </div>
+                                        <div class="activity-details">
+                                            <div class="activity-title">Safari on iPhone</div>
+                                            <div class="activity-time">Last active: 2 hours ago • London, UK</div>
+                                        </div>
+                                        <button class="btn btn-outline btn-small">
+                                            <i class="fas fa-sign-out-alt"></i> Logout
+                                        </button>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary btn-block" id="logoutAllSessions">
+                                    <i class="fas fa-sign-out-alt"></i> Logout All Sessions
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(modal);
+                    
+                    // Close modal
+                    modal.querySelector('.modal-close').addEventListener('click', () => {
+                        modal.remove();
+                    });
+                    
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            modal.remove();
+                        }
+                    });
+                    
+                    // Logout all sessions
+                    modal.querySelector('#logoutAllSessions').addEventListener('click', () => {
+                        modal.remove();
+                        if (window.shared) {
+                            window.shared.showToast('All sessions logged out successfully!');
+                        }
+                    });
+                });
+            }
+            
+            // Show error log if there are errors
+            const errors = JSON.parse(localStorage.getItem('systemErrors') || '[]');
+            if (errors.length > 0) {
+                document.getElementById('errorLog').style.display = 'block';
+            }
+        });
+    </script>
+    
+</body>
+</html>

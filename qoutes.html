@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investment Quotes | EFL Investment Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Quotes Page Specific Styles */
+        .quotes-hero {
+            background: linear-gradient(135deg, rgba(45, 116, 218, 0.1) 0%, rgba(0, 180, 216, 0.1) 100%);
+            padding: 4rem 0;
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .quote-generator {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+        
+        @media (max-width: 992px) {
+            .quote-generator {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .quote-inputs, .quote-results {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.1);
+        }
+        
+        .current-plan-indicator {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+        }
+        
+        .quote-results-card {
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+        
+        .quote-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .quote-header h4 {
+            color: white;
+            margin: 0;
+        }
+        
+        .quote-date {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .quote-body {
+            padding: 2rem;
+        }
+        
+        .quote-summary {
+            background: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .quote-periods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .period-card {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .period-card:hover {
+            border-color: var(--accent-color);
+            box-shadow: var(--shadow);
+        }
+        
+        .period-card h5 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        .period-details {
+            font-size: 0.9rem;
+        }
+        
+        .period-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .period-row.total {
+            border-top: 2px solid var(--accent-color);
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .period-row:last-child {
+            border-bottom: none;
+        }
+        
+        .quote-footer {
+            padding: 1.5rem;
+            background: var(--light-gray);
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .saved-quotes {
+            margin-top: 4rem;
+        }
+        
+        .quotes-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .quote-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .quote-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .quote-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+        
+        .quote-item-header h4 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .quote-item-date {
+            font-size: 0.85rem;
+            color: var(--gray-color);
+        }
+        
+        .quote-item-details {
+            margin-bottom: 1rem;
+        }
+        
+        .quote-item-details div {
+            margin-bottom: 0.5rem;
+            color: var(--gray-color);
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-color);
+            grid-column: 1 / -1;
+        }
+        
+        .projection-chart {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+        }
+        
+        .chart-bar {
+            height: 30px;
+            background: linear-gradient(90deg, var(--accent-light), var(--accent-color));
+            margin-bottom: 1rem;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-bar span {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .input-error {
+            border-color: var(--danger-color) !important;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="container nav-container">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <span>EFL</span>Invest
+                </a>
+                
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="currency.html"><i class="fas fa-exchange-alt"></i> Currency</a></li>
+                    <li><a href="investments.html"><i class="fas fa-piggy-bank"></i> Investments</a></li>
+                    <li><a href="quotes.html" class="active"><i class="fas fa-file-invoice-dollar"></i> Quotes</a></li>
+                    <li><a href="profile.html"><i class="fas fa-user-circle"></i> Profile</a></li>
+                    <li>
+    <button id="themeToggle" class="theme-toggle-btn">
+        <i class="fas fa-moon"></i>
+    </button>
+</li>
+                </ul>
+                
+                <button class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <main class="container">
+            <section class="quotes-hero">
+                <h1>Investment Quotes</h1>
+                <p class="subtitle">Generate detailed investment quotes showing projected returns, fees, and taxes over different time periods</p>
+            </section>
+
+            <!-- Quote Generator -->
+            <div class="quote-generator">
+                <div class="quote-inputs">
+                    <h2><i class="fas fa-calculator"></i> Generate Quote</h2>
+                    <p class="section-description">Enter your investment details to generate a personalized quote</p>
+                    
+                    <div class="form-group">
+                        <label for="initialInvestment">Initial Investment (£)</label>
+                        <input type="number" id="initialInvestment" placeholder="Enter initial lump sum" min="0" step="100" value="1000">
+                        <div class="error-message" id="initialError">Please enter a valid initial investment</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="monthlyInvestment">Monthly Investment (£)</label>
+                        <input type="number" id="monthlyInvestment" placeholder="Enter monthly amount" min="0" step="10" value="200">
+                        <div class="error-message" id="monthlyError">Please enter a valid monthly investment</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="selectedPlan">Investment Plan</label>
+                        <select id="selectedPlan">
+                            <option value="">Select a plan</option>
+                            <option value="basic">Basic Savings Plan</option>
+                            <option value="plus" selected>Savings Plan Plus</option>
+                            <option value="managed">Managed Stock Investments</option>
+                        </select>
+                        <div class="error-message" id="planError">Please select an investment plan</div>
+                    </div>
+                    
+                    <button id="calculateQuote" class="btn btn-primary btn-block">
+                        <i class="fas fa-calculator"></i> Calculate Quote
+                    </button>
+                    
+                    <div class="current-plan-indicator">
+                        <h4>Investment Details:</h4>
+                        <div class="summary-item">
+                            <span>Initial Investment:</span>
+                            <span id="currentInitial">£1,000.00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Monthly Investment:</span>
+                            <span id="currentMonthly">£200.00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Selected Plan:</span>
+                            <span id="currentPlan">Savings Plan Plus</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quote-results">
+                    <h2><i class="fas fa-file-invoice-dollar"></i> Investment Quote</h2>
+                    <p class="section-description">Your personalized investment projection</p>
+                    
+                    <div class="quote-results-card">
+                        <div class="quote-header">
+                            <h4 id="quotePlanName">Savings Plan Plus</h4>
+                            <div class="quote-date" id="quoteDate">-</div>
+                        </div>
+                        
+                        <div class="quote-body">
+                            <div class="quote-summary">
+                                <div class="summary-item">
+                                    <span>Initial Investment</span>
+                                    <span id="quoteInitial">£0.00</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Monthly Investment</span>
+                                    <span id="quoteMonthly">£0.00</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Selected Plan</span>
+                                    <span id="quotePlan">-</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Projection Chart -->
+                            <div class="projection-chart">
+                                <h5 style="margin-bottom: 1rem;">Projected Growth</h5>
+                                <div class="chart-bar" id="chart1Year" style="width: 30%;">
+                                    <span>1 Year</span>
+                                </div>
+                                <div class="chart-bar" id="chart5Year" style="width: 60%;">
+                                    <span>5 Years</span>
+                                </div>
+                                <div class="chart-bar" id="chart10Year" style="width: 100%;">
+                                    <span>10 Years</span>
+                                </div>
+                            </div>
+                            
+                            <div class="quote-periods">
+                                <div class="period-card">
+                                    <h5>1 Year Projection</h5>
+                                    <div class="period-details">
+                                        <div class="period-row">
+                                            <span>Min Value</span>
+                                            <span id="year1Min">£0.00</span>
+                                        </div>
+                                        <div class="period-row">
+                                            <span>Max Value</span>
+                                            <span id="year1Max">£0.00</span>
+                                        </div>
+                                        <div class="period-row">
+                                            <span>Total Fees</span>
+                                            <span id="year1Fees">£0.00</span>
+                                        </div>
+                                        <div class="period-row">
+                                            <span>Total Tax</span>
+                                            <span id="year1Tax">£0.00</span>
+                                        </div>
+                                        <div class="period-row total">
+                                            <span>Total Profit</span>
+                                            <span id="year1Profit">£0.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="period-card">
+                                    <h5>5 Year Projection</h5>
+                                    <div class="period-details">
+                                        <div class="period-row">
+                                            <span>Min Value</span>
+                                            <span id="year5Min">£0.00</span>
+                                        </div>
+                                        <div class="period-row">
+                                            <span>Max Value</span>
+                                            <span id="year5Max">£0.00</span>
+                                        </div>
+                                        <div class="period-row">
+                                            <span>Total Fees</span>
+                                            <span id="year5Fees">£0.00</span>
+                                        </div>
+                                        <div class="period-row">
+                                            <span>Total Tax</span>
+                                            <span id="year5Tax">£0.00</span>
+                                        </div>
+                                        <div class="period-row total">
+                                            <span>Total Profit</span>
+                                            <span id="year5Profit">£0.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="period-card">
+                                    <h5>10 Year Projection</h5>
+                                    <div class="period-details">
+                                        <div class="period-row">
+                                            <span>Min Value</span>
+                                            <span id="year10Min">£0.00</span>
+                                        </div>
+                                        <div class="period-row">
+                                            <span>Max Value</span>
+                                            <span id="year10Max">£0.00</span>
+                                        </div>
+                                        <div class="period-row">
+                                            <span>Total Fees</span>
+                                            <span id="year10Fees">£0.00</span>
+                                        </div>
+                                        <div class="period-row">
+                                            <span>Total Tax</span>
+                                            <span id="year10Tax">£0.00</span>
+                                        </div>
+                                        <div class="period-row total">
+                                            <span>Total Profit</span>
+                                            <span id="year10Profit">£0.00</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="quote-footer">
+                            <button id="saveQuote" class="btn btn-secondary">
+                                <i class="fas fa-save"></i> Save Quote
+                            </button>
+                            <button id="downloadQuote" class="btn btn-outline">
+                                <i class="fas fa-download"></i> Download PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Saved Quotes -->
+            <div class="saved-quotes">
+                <h2><i class="fas fa-history"></i> Saved Quotes</h2>
+                <p class="section-description">Access your previously generated and saved investment quotes</p>
+                
+                <div id="savedQuotesList" class="quotes-list">
+                    <!-- Quotes will be loaded here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Quote Information -->
+            <section class="features">
+                <h2>Understanding Your Quote</h2>
+                <p class="section-description">What each section of your investment quote means</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-pound-sign"></i>
+                        </div>
+                        <h3>Projected Value</h3>
+                        <p>Minimum and maximum estimated portfolio value after 1, 5, and 10 years based on plan performance ranges.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <h3>Total Fees</h3>
+                        <p>Cumulative management fees over the investment period, calculated monthly on your portfolio value.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h3>Total Tax</h3>
+                        <p>Estimated tax liability based on profit thresholds and current tax legislation for your chosen plan.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Total Profit</h3>
+                        <p>Net profit after deducting all fees and taxes from your investment returns over the specified period.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>EFL Invest Platform</h4>
+                        <p>Professional financial tools developed by PDS Digital Solutions for Enomy-Finances Limited.</p>
+                        <div class="footer-social">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-facebook"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                            <li><a href="currency.html"><i class="fas fa-chevron-right"></i> Currency Converter</a></li>
+                            <li><a href="investments.html"><i class="fas fa-chevron-right"></i> Investment Plans</a></li>
+                            <li><a href="quotes.html"><i class="fas fa-chevron-right"></i> Quotes</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Terms of Service</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Cookie Policy</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Compliance</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Contact</h4>
+                        <p><i class="fas fa-envelope"></i> support@eflinvest.com</p>
+                        <p><i class="fas fa-phone"></i> +44 20 7123 4567</p>
+                        <p><i class="fas fa-map-marker-alt"></i> London, United Kingdom</p>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2025 EFL Investment Platform. Developed by PDS Digital Solutions. All rights reserved.</p>
+                    <p class="system-status">
+                        <i class="fas fa-circle status-online"></i> System Status: <strong>Operational</strong>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Error Modal -->
+        <div class="modal" id="errorModal">
+            <div class="modal-content">
+                <div class="modal-header error">
+                    <h3><i class="fas fa-exclamation-triangle"></i> System Error</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="errorMessage">An unexpected error has occurred. Please try again later.</p>
+                    <div class="error-actions">
+                        <button class="btn btn-primary" id="retryButton">Retry</button>
+                        <button class="btn btn-outline" id="reportButton">Report Issue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Toast -->
+        <div class="toast" id="successToast">
+            <div class="toast-content">
+                <i class="fas fa-check-circle toast-icon"></i>
+                <div class="toast-message">Operation completed successfully!</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        // Quotes Page Specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Investment Calculator Class
+            class InvestmentCalculator {
+                constructor() {
+                    this.plans = {
+                        basic: {
+                            name: 'Basic Savings Plan',
+                            minMonthly: 50,
+                            maxAnnual: 20000,
+                            minInitial: 0,
+                            returns: { min: 0.012, max: 0.024 },
+                            monthlyFee: 0.0025,
+                            taxBrackets: [{ threshold: Infinity, rate: 0 }]
+                        },
+                        plus: {
+                            name: 'Savings Plan Plus',
+                            minMonthly: 50,
+                            maxAnnual: 30000,
+                            minInitial: 300,
+                            returns: { min: 0.03, max: 0.055 },
+                            monthlyFee: 0.003,
+                            taxBrackets: [{ threshold: 12000, rate: 0.10 }]
+                        },
+                        managed: {
+                            name: 'Managed Stock Investments',
+                            minMonthly: 150,
+                            maxAnnual: Infinity,
+                            minInitial: 1000,
+                            returns: { min: 0.04, max: 0.23 },
+                            monthlyFee: 0.013,
+                            taxBrackets: [
+                                { threshold: 12000, rate: 0.10 },
+                                { threshold: 40000, rate: 0.20 }
+                            ]
+                        }
+                    };
+                }
+
+                calculateReturns(initial, monthly, plan, years) {
+                    const planData = this.plans[plan];
+                    if (!planData) return null;
+
+                    // Validate inputs
+                    if (initial < planData.minInitial) {
+                        throw new Error(`Minimum initial investment for ${planData.name} is £${planData.minInitial}`);
+                    }
+                    
+                    if (monthly < planData.minMonthly) {
+                        throw new Error(`Minimum monthly investment for ${planData.name} is £${planData.minMonthly}`);
+                    }
+                    
+                    const annualTotal = initial + (monthly * 12);
+                    if (annualTotal > planData.maxAnnual && planData.maxAnnual !== Infinity) {
+                        throw new Error(`Maximum annual investment for ${planData.name} is £${planData.maxAnnual.toLocaleString()}`);
+                    }
+
+                    // Calculate compound interest with monthly contributions
+                    let minValue = initial;
+                    let maxValue = initial;
+                    let totalFees = 0;
+                    
+                    for (let year = 1; year <= years; year++) {
+                        for (let month = 1; month <= 12; month++) {
+                            // Add monthly contribution at start of month
+                            minValue += monthly;
+                            maxValue += monthly;
+                            
+                            // Calculate monthly growth
+                            const monthlyMinRate = Math.pow(1 + planData.returns.min, 1/12) - 1;
+                            const monthlyMaxRate = Math.pow(1 + planData.returns.max, 1/12) - 1;
+                            
+                            minValue *= (1 + monthlyMinRate);
+                            maxValue *= (1 + monthlyMaxRate);
+                            
+                            // Calculate and subtract monthly fee
+                            const monthlyFee = (minValue + maxValue) / 2 * planData.monthlyFee;
+                            totalFees += monthlyFee;
+                            minValue -= monthlyFee / 2;
+                            maxValue -= monthlyFee / 2;
+                        }
+                    }
+
+                    // Calculate tax
+                    const minProfit = minValue - initial - (monthly * 12 * years);
+                    const maxProfit = maxValue - initial - (monthly * 12 * years);
+                    
+                    const minTax = this.calculateTax(minProfit, planData.taxBrackets);
+                    const maxTax = this.calculateTax(maxProfit, planData.taxBrackets);
+
+                    return {
+                        minValue: Math.max(0, minValue - minTax),
+                        maxValue: Math.max(0, maxValue - maxTax),
+                        totalFees,
+                        minTax,
+                        maxTax,
+                        minProfit: Math.max(0, minProfit - minTax),
+                        maxProfit: Math.max(0, maxProfit - maxTax)
+                    };
+                }
+
+                calculateTax(profit, brackets) {
+                    if (profit <= 0) return 0;
+                    
+                    let tax = 0;
+                    let previousThreshold = 0;
+                    
+                    for (const bracket of brackets) {
+                        if (profit > previousThreshold) {
+                            const taxableAmount = Math.min(profit, bracket.threshold) - previousThreshold;
+                            tax += taxableAmount * bracket.rate;
+                            previousThreshold = bracket.threshold;
+                        }
+                    }
+                    
+                    return tax;
+                }
+            }
+
+            // DOM Elements
+            const calculateQuoteBtn = document.getElementById('calculateQuote');
+            const saveQuoteBtn = document.getElementById('saveQuote');
+            const downloadQuoteBtn = document.getElementById('downloadQuote');
+            const savedQuotesList = document.getElementById('savedQuotesList');
+            
+            // Form inputs
+            const initialInvestmentInput = document.getElementById('initialInvestment');
+            const monthlyInvestmentInput = document.getElementById('monthlyInvestment');
+            const selectedPlanInput = document.getElementById('selectedPlan');
+            
+            // Display elements
+            const currentInitialSpan = document.getElementById('currentInitial');
+            const currentMonthlySpan = document.getElementById('currentMonthly');
+            const currentPlanSpan = document.getElementById('currentPlan');
+            
+            // Quote result elements
+            const quotePlanName = document.getElementById('quotePlanName');
+            const quoteDate = document.getElementById('quoteDate');
+            const quoteInitial = document.getElementById('quoteInitial');
+            const quoteMonthly = document.getElementById('quoteMonthly');
+            const quotePlan = document.getElementById('quotePlan');
+            
+            // Year projections
+            const year1Min = document.getElementById('year1Min');
+            const year1Max = document.getElementById('year1Max');
+            const year1Fees = document.getElementById('year1Fees');
+            const year1Tax = document.getElementById('year1Tax');
+            const year1Profit = document.getElementById('year1Profit');
+            
+            const year5Min = document.getElementById('year5Min');
+            const year5Max = document.getElementById('year5Max');
+            const year5Fees = document.getElementById('year5Fees');
+            const year5Tax = document.getElementById('year5Tax');
+            const year5Profit = document.getElementById('year5Profit');
+            
+            const year10Min = document.getElementById('year10Min');
+            const year10Max = document.getElementById('year10Max');
+            const year10Fees = document.getElementById('year10Fees');
+            const year10Tax = document.getElementById('year10Tax');
+            const year10Profit = document.getElementById('year10Profit');
+            
+            // Chart bars
+            const chart1Year = document.getElementById('chart1Year');
+            const chart5Year = document.getElementById('chart5Year');
+            const chart10Year = document.getElementById('chart10Year');
+            
+            // Error messages
+            const initialError = document.getElementById('initialError');
+            const monthlyError = document.getElementById('monthlyError');
+            const planError = document.getElementById('planError');
+            
+            // Initialize calculator
+            const calculator = new InvestmentCalculator();
+            
+            // Current quote data
+            let currentQuote = null;
+            
+            // Check for plan parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const planParam = urlParams.get('plan');
+            if (planParam && ['basic', 'plus', 'managed'].includes(planParam)) {
+                selectedPlanInput.value = planParam;
+            }
+            
+            // Update current plan display
+            function updateCurrentPlanDisplay() {
+                const initial = parseFloat(initialInvestmentInput.value) || 0;
+                const monthly = parseFloat(monthlyInvestmentInput.value) || 0;
+                const plan = selectedPlanInput.value;
+                
+                const planNames = {
+                    'basic': 'Basic Savings Plan',
+                    'plus': 'Savings Plan Plus',
+                    'managed': 'Managed Stock Investments'
+                };
+                
+                currentInitialSpan.textContent = formatCurrency(initial);
+                currentMonthlySpan.textContent = formatCurrency(monthly);
+                currentPlanSpan.textContent = planNames[plan] || 'Not selected';
+            }
+            
+            // Format currency
+            function formatCurrency(amount) {
+                return new Intl.NumberFormat('en-GB', {
+                    style: 'currency',
+                    currency: 'GBP',
+                    minimumFractionDigits: 2
+                }).format(amount);
+            }
+            
+            // Validate form
+            function validateForm() {
+                let isValid = true;
+                
+                // Clear previous errors
+                initialInvestmentInput.classList.remove('input-error');
+                monthlyInvestmentInput.classList.remove('input-error');
+                selectedPlanInput.classList.remove('input-error');
+                initialError.style.display = 'none';
+                monthlyError.style.display = 'none';
+                planError.style.display = 'none';
+                
+                const initial = parseFloat(initialInvestmentInput.value);
+                const monthly = parseFloat(monthlyInvestmentInput.value);
+                const plan = selectedPlanInput.value;
+                
+                // Validate initial investment
+                if (isNaN(initial) || initial < 0) {
+                    initialInvestmentInput.classList.add('input-error');
+                    initialError.style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Validate monthly investment
+                if (isNaN(monthly) || monthly < 0) {
+                    monthlyInvestmentInput.classList.add('input-error');
+                    monthlyError.style.display = 'block';
+                    isValid = false;
+                }
+                
+                // Validate plan selection
+                if (!plan) {
+                    selectedPlanInput.classList.add('input-error');
+                    planError.style.display = 'block';
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
+            
+            // Calculate quote
+            function calculateQuote() {
+                if (!validateForm()) {
+                    return;
+                }
+                
+                const initial = parseFloat(initialInvestmentInput.value);
+                const monthly = parseFloat(monthlyInvestmentInput.value);
+                const plan = selectedPlanInput.value;
+                
+                try {
+                    // Calculate returns for different periods
+                    const returns1yr = calculator.calculateReturns(initial, monthly, plan, 1);
+                    const returns5yr = calculator.calculateReturns(initial, monthly, plan, 5);
+                    const returns10yr = calculator.calculateReturns(initial, monthly, plan, 10);
+                    
+                    // Update display
+                    const planNames = {
+                        'basic': 'Basic Savings Plan',
+                        'plus': 'Savings Plan Plus',
+                        'managed': 'Managed Stock Investments'
+                    };
+                    
+                    quotePlanName.textContent = planNames[plan];
+                    quoteDate.textContent = new Date().toLocaleDateString('en-GB', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    quoteInitial.textContent = formatCurrency(initial);
+                    quoteMonthly.textContent = formatCurrency(monthly);
+                    quotePlan.textContent = planNames[plan];
+                    
+                    // Update 1 year projection
+                    year1Min.textContent = formatCurrency(returns1yr.minValue);
+                    year1Max.textContent = formatCurrency(returns1yr.maxValue);
+                    year1Fees.textContent = formatCurrency(returns1yr.totalFees);
+                    year1Tax.textContent = formatCurrency(returns1yr.minTax);
+                    year1Profit.textContent = formatCurrency(returns1yr.minProfit);
+                    
+                    // Update 5 year projection
+                    year5Min.textContent = formatCurrency(returns5yr.minValue);
+                    year5Max.textContent = formatCurrency(returns5yr.maxValue);
+                    year5Fees.textContent = formatCurrency(returns5yr.totalFees);
+                    year5Tax.textContent = formatCurrency(returns5yr.minTax);
+                    year5Profit.textContent = formatCurrency(returns5yr.minProfit);
+                    
+                    // Update 10 year projection
+                    year10Min.textContent = formatCurrency(returns10yr.minValue);
+                    year10Max.textContent = formatCurrency(returns10yr.maxValue);
+                    year10Fees.textContent = formatCurrency(returns10yr.totalFees);
+                    year10Tax.textContent = formatCurrency(returns10yr.minTax);
+                    year10Profit.textContent = formatCurrency(returns10yr.minProfit);
+                    
+                    // Update chart bars based on profit percentage
+                    const maxProfit = Math.max(returns1yr.minProfit, returns5yr.minProfit, returns10yr.minProfit);
+                    const scale = maxProfit > 0 ? 100 / maxProfit : 0;
+                    
+                    chart1Year.style.width = `${Math.min(100, returns1yr.minProfit * scale)}%`;
+                    chart5Year.style.width = `${Math.min(100, returns5yr.minProfit * scale)}%`;
+                    chart10Year.style.width = `${Math.min(100, returns10yr.minProfit * scale)}%`;
+                    
+                    // Store current quote
+                    currentQuote = {
+                        initial,
+                        monthly,
+                        plan,
+                        returns1yr,
+                        returns5yr,
+                        returns10yr,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    // Show success message
+                    showToast('Quote calculated successfully!');
+                    
+                } catch (error) {
+                    showError(error.message);
+                }
+            }
+            
+            // Save quote
+            function saveQuote() {
+                if (!currentQuote) {
+                    showError('Please calculate a quote first');
+                    return;
+                }
+                
+                const savedQuotes = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+                savedQuotes.unshift({
+                    ...currentQuote,
+                    id: Date.now()
+                });
+                
+                localStorage.setItem('savedQuotes', JSON.stringify(savedQuotes.slice(0, 20))); // Keep last 20
+                
+                updateSavedQuotesDisplay();
+                showToast('Quote saved successfully!');
+            }
+            
+            // Download quote
+            function downloadQuote() {
+                if (!currentQuote) {
+                    showError('Please calculate a quote first');
+                    return;
+                }
+                
+                const planNames = {
+                    'basic': 'Basic Savings Plan',
+                    'plus': 'Savings Plan Plus',
+                    'managed': 'Managed Stock Investments'
+                };
+                
+                const quoteText = `EFL Investment Quote\n\n` +
+                    `Date: ${new Date().toLocaleDateString()}\n` +
+                    `Plan: ${planNames[currentQuote.plan]}\n` +
+                    `Initial Investment: ${formatCurrency(currentQuote.initial)}\n` +
+                    `Monthly Investment: ${formatCurrency(currentQuote.monthly)}\n\n` +
+                    `1 Year Projection:\n` +
+                    `  Min Value: ${formatCurrency(currentQuote.returns1yr.minValue)}\n` +
+                    `  Max Value: ${formatCurrency(currentQuote.returns1yr.maxValue)}\n` +
+                    `  Total Fees: ${formatCurrency(currentQuote.returns1yr.totalFees)}\n` +
+                    `  Total Tax: ${formatCurrency(currentQuote.returns1yr.minTax)}\n` +
+                    `  Total Profit: ${formatCurrency(currentQuote.returns1yr.minProfit)}\n\n` +
+                    `5 Year Projection:\n` +
+                    `  Min Value: ${formatCurrency(currentQuote.returns5yr.minValue)}\n` +
+                    `  Max Value: ${formatCurrency(currentQuote.returns5yr.maxValue)}\n` +
+                    `  Total Fees: ${formatCurrency(currentQuote.returns5yr.totalFees)}\n` +
+                    `  Total Tax: ${formatCurrency(currentQuote.returns5yr.minTax)}\n` +
+                    `  Total Profit: ${formatCurrency(currentQuote.returns5yr.minProfit)}\n\n` +
+                    `10 Year Projection:\n` +
+                    `  Min Value: ${formatCurrency(currentQuote.returns10yr.minValue)}\n` +
+                    `  Max Value: ${formatCurrency(currentQuote.returns10yr.maxValue)}\n` +
+                    `  Total Fees: ${formatCurrency(currentQuote.returns10yr.totalFees)}\n` +
+                    `  Total Tax: ${formatCurrency(currentQuote.returns10yr.minTax)}\n` +
+                    `  Total Profit: ${formatCurrency(currentQuote.returns10yr.minProfit)}\n\n` +
+                    `Generated by EFL Investment Platform`;
+                
+                const blob = new Blob([quoteText], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `EFL-Quote-${Date.now()}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showToast('Quote downloaded successfully!');
+            }
+            
+            // Update saved quotes display
+            function updateSavedQuotesDisplay() {
+                const savedQuotes = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+                
+                if (savedQuotes.length === 0) {
+                    savedQuotesList.innerHTML = '<p class="empty-message">No saved quotes yet. Generate a quote and save it to view here.</p>';
+                    return;
+                }
+                
+                const planNames = {
+                    'basic': 'Basic Savings Plan',
+                    'plus': 'Savings Plan Plus',
+                    'managed': 'Managed Stock Investments'
+                };
+                
+                savedQuotesList.innerHTML = savedQuotes.map(quote => {
+                    const date = new Date(quote.timestamp);
+                    const formattedDate = date.toLocaleDateString('en-GB', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                    });
+                    
+                    return `
+                        <div class="quote-item">
+                            <div class="quote-item-header">
+                                <h4>${planNames[quote.plan]}</h4>
+                                <span class="quote-item-date">${formattedDate}</span>
+                            </div>
+                            <div class="quote-item-details">
+                                <div>Initial: ${formatCurrency(quote.initial)}</div>
+                                <div>Monthly: ${formatCurrency(quote.monthly)}</div>
+                                <div>1yr Profit: ${formatCurrency(quote.returns1yr.minProfit)}</div>
+                            </div>
+                            <button class="btn btn-outline btn-small load-quote" data-id="${quote.id}" style="width: 100%;">
+                                <i class="fas fa-eye"></i> Load This Quote
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Add event listeners to load buttons
+                document.querySelectorAll('.load-quote').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const quoteId = parseInt(this.dataset.id);
+                        const savedQuotes = JSON.parse(localStorage.getItem('savedQuotes') || '[]');
+                        const quote = savedQuotes.find(q => q.id === quoteId);
+                        
+                        if (quote) {
+                            // Fill the quote form with saved values
+                            initialInvestmentInput.value = quote.initial;
+                            monthlyInvestmentInput.value = quote.monthly;
+                            selectedPlanInput.value = quote.plan;
+                            
+                            updateCurrentPlanDisplay();
+                            calculateQuote();
+                            showToast('Quote loaded successfully!');
+                            
+                            // Scroll to top
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                    });
+                });
+            }
+            
+            // Show toast message
+            function showToast(message) {
+                const toast = document.getElementById('successToast');
+                const toastMessage = document.querySelector('.toast-message');
+                
+                if (toast && toastMessage) {
+                    toastMessage.textContent = message;
+                    toast.classList.add('active');
+                    
+                    setTimeout(() => {
+                        toast.classList.remove('active');
+                    }, 3000);
+                }
+            }
+            
+            // Show error message
+            function showError(message) {
+                const modal = document.getElementById('errorModal');
+                const errorMessage = document.getElementById('errorMessage');
+                
+                if (modal && errorMessage) {
+                    errorMessage.textContent = message;
+                    modal.classList.add('active');
+                    
+                    // Close modal when clicking X or outside
+                    const closeModal = () => modal.classList.remove('active');
+                    
+                    document.querySelector('.modal-close')?.addEventListener('click', closeModal);
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) closeModal();
+                    });
+                    
+                    // Retry button
+                    document.getElementById('retryButton')?.addEventListener('click', () => {
+                        closeModal();
+                        calculateQuote();
+                    });
+                }
+            }
+            
+            // Event Listeners
+            calculateQuoteBtn.addEventListener('click', calculateQuote);
+            saveQuoteBtn.addEventListener('click', saveQuote);
+            downloadQuoteBtn.addEventListener('click', downloadQuote);
+            
+            // Update on input changes
+            initialInvestmentInput.addEventListener('input', updateCurrentPlanDisplay);
+            monthlyInvestmentInput.addEventListener('input', updateCurrentPlanDisplay);
+            selectedPlanInput.addEventListener('change', updateCurrentPlanDisplay);
+            
+            // Allow Enter key to calculate quote
+            initialInvestmentInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') calculateQuote();
+            });
+            
+            monthlyInvestmentInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') calculateQuote();
+            });
+            
+            selectedPlanInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') calculateQuote();
+            });
+            
+            // Initialize
+            updateCurrentPlanDisplay();
+            updateSavedQuotesDisplay();
+            
+            // Auto-calculate on page load with default values
+            setTimeout(() => {
+                calculateQuote();
+            }, 500);
+        });
+    </script>
+    
+</body>
+</html>
